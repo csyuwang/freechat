@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import NavBarActions from '../actions/NavBarActions';
 import NavBarStore from '../stores/NavBarStore';
+import SocketService from '../SocketService';
 
 class NavBar extends React.Component {
 
@@ -13,21 +14,19 @@ class NavBar extends React.Component {
 
   componentDidMount() {
     NavBarStore.listen(this.onChange);
-    let socket = io();
-
-    socket.on('onlineUsers', (data) => {
+    SocketService.on('onlineUsers', (data) => {
       NavBarActions.updateOnlineUsers(data);
     })
   }
 
   componentWillUnmount() {
-    NavbarStore.unlisten(this.onChange);
+    SocketService.removeAllListeners('onlineUsers');
+    NavBarStore.unlisten(this.onChange);
   }
 
   onChange(state) {
     this.setState(state);
   }
-
 
   render() {
     return (
