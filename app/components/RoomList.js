@@ -58,7 +58,7 @@ class RoomList extends React.Component {
             </div>
             <div className='col-sm-3 hidden-xs'>
             <div className="list-group">
-              { tags }
+
             </div>
             </div>
         </div>

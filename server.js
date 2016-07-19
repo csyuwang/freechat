@@ -7,7 +7,10 @@ var favicon = require('serve-favicon');
 var React = require('react');
 var Router = require('react-router');
 var swig = require('swig');
+// React routes
 var routes = require('./app/routes');
+// node server routes
+var router = require('./routes');
 
 var app = express();
 
@@ -17,6 +20,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', router);
 
 app.use(function(req, res) {
   Router.run(routes, req.path, function(App) {
@@ -51,8 +56,6 @@ io.on('connection', function(socket){
 
   socket.on('message', function(msg) {
     io.to(roomId).emit('new message', {'content': msg.content, 'userId': userId });
-    console.log('roomId:' + roomId);
-    console.log('broadcast');
   })
 
   socket.on('disconnect', function(){
@@ -63,7 +66,6 @@ io.on('connection', function(socket){
         if (err) {
           log.error(err);
         } else {
-          console.log(roomId);
           var index = roomUsers[roomId].indexOf(userId);
           if (index !== -1) {
             roomUsers[roomId].splice(index, 1);
@@ -75,7 +77,6 @@ io.on('connection', function(socket){
   });
 
   socket.on('leave', function(){
-    console.log('leave');
     socket.leave(roomId, function (err){
       if (err) {
         log.error(err);

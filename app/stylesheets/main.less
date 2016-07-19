@@ -46,7 +46,7 @@
 @screen-sm: 800px;
 
 
-@footer-height:220px;
+@footer-height:190px;
 
 html {
   position: relative;
@@ -792,6 +792,21 @@ label {
   }
 }
 
+.navbar-login-form {
+  float: right;
+}
+
+.navbar-login-info {
+  float: right;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  a {
+    color: #21c7c1;
+  }
+
+}
+
 .div-center {
   margin: auto;
   position: absolute;
@@ -827,18 +842,48 @@ div.room-panel {
   }
 }
 
-.background-image {
+.homepage {
+  min-height: 500px;
+  margin-top: -20px;
+  padding-top: 140px;
+  padding-bottom: 100px;
+}
+
+.homepage-background-image {
   background-image: url('/img/home_bg.jpg');
   background-position: 0px 25px;
   background-size: 100% 120%;
   background-repeat:no-repeat;
-  // filter: blur(8px);
-  // -webkit-filter: blur(8px);
+  filter: blur(12px) opacity(0.8);
+  -webkit-filter: blur(12px) opacity(0.8);
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: block;
   position: absolute;
   bottom: @footer-height;
+  z-index: -100;
+}
+
+.homepage-container {
+  max-width: 980px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.homepage-intro {
+  h4 {
+    font-size: 48px;
+    font-weight: 300;
+    color: #000;
+  }
+}
+
+.homepage-signup {
+  input, button {
+    border-radius: 6px;
+  }
 }
 
 .home_content {
