@@ -58,4 +58,44 @@ router.get('/api/fetchUser', function(req, res, next) {
   });
 });
 
+router.get('/api/fetchMessages', function(req, res, next) {
+  var roomId = req.query.roomId;
+  var count = req.query.count;
+  controllers.Message.findByRoom(roomId, count, function(err, messages){
+    if(err) {
+      return next(err);
+    }
+    res.send(messages || []);
+  });
+});
+
+router.get('/api/fetchRooms', function(req, res, next) {
+  controllers.Room.findAll(function(err, rooms){
+    if(err) {
+      return next(err);
+    }
+    res.send(rooms || []);
+  });
+});
+
+
+router.post('/api/createRoom', function(req, res, next) {
+  var roomname = req.body.roomname;
+  var username = req.body.username;
+  controllers.Room.findByName(roomname, function(err, room){
+    if(err) {
+      return next(err);
+    }
+    if(room) {
+      return res.status(409).send({ message: room.name + ' is already in the database.' });
+    }
+    controllers.Room.create(roomname, username, function(err, room) {
+      if (err) {
+        return next(err);
+      }
+      res.send(room);
+    });
+  });
+});
+
 module.exports = router;

@@ -17,7 +17,7 @@ class LoginStore {
   }
 
   onLoginSuccess(payload) {
-    payload.router.transitionTo('/rooms');
+    payload.router.transitionTo('/lobby');
   }
 
   onLoginFail(jqXhr) {

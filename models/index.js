@@ -7,3 +7,5 @@ mongoose.connection.on('error', function() {
 });
 
 exports.User = mongoose.model('User', require('./user'));
+exports.Room = mongoose.model('Room', require('./room'));
+exports.Message = mongoose.model('Message', require('./message'));

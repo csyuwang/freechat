@@ -1,7 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router';
+import LobbyActions from '../actions/LobbyActions';
+import LobbyStore from '../stores/LobbyStore';
 
-class RoomList extends React.Component {
+class Lobby extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = LobbyStore.getState();
+    this.onChange = this.onChange.bind(this);
+  }
+
+  componentDidMount() {
+    LobbyStore.listen(this.onChange);
+    LobbyActions.fetchRooms();
+  }
+
+  componentWillUnmount() {
+    LobbyStore.unlisten(this.onChange);
+  }
+
+  onChange(state) {
+    this.setState(state);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+
+    var roomname = this.state.roomname.trim();
+
+    if(!roomname) {
+
+    } else {
+      LobbyActions.createRoom(roomname, this.props.user.name);
+    }
+  }
 
   render() {
 
@@ -26,12 +59,12 @@ class RoomList extends React.Component {
       {'id':7, 'name':'Tag7','count':55,'likes':1233}
     ];
 
-    var rooms = roomList.map((room) => {
+    var rooms = this.state.rooms.map((room) => {
       return (
-        <Link key={room.id} to={'/rooms/' + room.id}>
+        <Link key={room._id} to={'/lobby/' + room._id}>
           <div className='col-md-3 col-sm-4 col-xs-6 room-panel'>
             <div className='room-name'><span>{ room.name }</span></div>
-            <div className='room-users'><span><strong>{ room.onlineUsers }</strong> online users</span></div>
+            <div className='room-users'><span>create by <strong>{ room.creator }</strong></span></div>
           </div>
         </Link>
       );
@@ -57,9 +90,14 @@ class RoomList extends React.Component {
               </div>
             </div>
             <div className='col-sm-3 hidden-xs'>
-            <div className="list-group">
-
-            </div>
+              <form className="form-inline" onSubmit={this.handleSubmit.bind(this)}>
+                <div className="form-group">
+                  <input type="text" className="form-control" placeholder="Type a room name" value={this.state.roomname} onChange={LobbyActions.updateRoomname} />
+                </div>
+                <button type="submit" className="btn btn-default">Create Room</button>
+              </form>
+              <div className="list-group">
+              </div>
             </div>
         </div>
       </div>
@@ -67,4 +105,4 @@ class RoomList extends React.Component {
   }
 }
 
-export default RoomList;
+export default Lobby;

@@ -11,6 +11,7 @@ var swig = require('swig');
 var routes = require('./app/routes');
 // node server routes
 var router = require('./routes');
+var controllers = require('./controllers');
 
 var app = express();
 
@@ -35,9 +36,11 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var onlineUsers = 0;
 var roomUsers = {};
+var users = {};
 
 io.on('connection', function(socket){
   var userId = null;
+  var username = null;
   var roomId = null;
   onlineUsers++;
 
@@ -45,17 +48,28 @@ io.on('connection', function(socket){
 
   socket.on('join', function(join) {
     userId = join.userId;
+    if(!users[userId]) {
+      users[userId] = {
+        name: join.username
+      };
+    }
+    username = users[userId].name;
     roomId = join.roomId;
+
     if(!roomUsers[roomId]) {
       roomUsers[roomId] = [];
     }
     roomUsers[roomId].push(userId);
     socket.join(roomId);
-    io.to(roomId).emit('new message', {'content': userId + ' 进入房间 ' + roomId});
+    io.to(roomId).emit('new message', {'content': username + ' 进入了房间', 'creator': 'System'});
   })
 
   socket.on('message', function(msg) {
-    io.to(roomId).emit('new message', {'content': msg.content, 'userId': userId });
+    controllers.Message.create(msg.content, username, roomId, function (err, message) {
+      if(!err) {
+        io.to(roomId).emit('new message', message);
+      }
+    });
   })
 
   socket.on('disconnect', function(){
@@ -69,7 +83,7 @@ io.on('connection', function(socket){
           var index = roomUsers[roomId].indexOf(userId);
           if (index !== -1) {
             roomUsers[roomId].splice(index, 1);
-            socket.broadcast.to(roomId).emit('new message', {'content': userId + ' 离开了房间 ' + roomId});
+            socket.broadcast.to(roomId).emit('new message', {'content': username + ' 离开了房间', 'username': 'System'});
           }
         }
       });
@@ -84,7 +98,7 @@ io.on('connection', function(socket){
         var index = roomUsers[roomId].indexOf(userId);
         if (index !== -1) {
           roomUsers[roomId].splice(index, 1);
-          socket.broadcast.to(roomId).emit('new message', {'content': userId + ' 离开了房间 ' + roomId});
+          socket.broadcast.to(roomId).emit('new message', {'content': username + ' 离开了房间'});
         }
       }
     });

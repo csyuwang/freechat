@@ -19,6 +19,14 @@ class RoomStore {
   onSendMessage() {
     this.message = '';
   }
+
+  onFetchMessagesSuccess(messages) {
+    this.messages = messages;
+  }
+
+  onFetchMessagesFail(jqXhr) {
+    toastr.error(jqXhr.responseJSON.message);
+  }
 }
 
 export default alt.createStore(RoomStore);

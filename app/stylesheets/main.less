@@ -46,7 +46,8 @@
 @screen-sm: 800px;
 
 
-@footer-height:190px;
+@footer-height: 190px;
+@username-color: #21c7c1;
 
 html {
   position: relative;
@@ -802,7 +803,7 @@ label {
   padding-right: 20px;
 
   a {
-    color: #21c7c1;
+    color: @username-color;
   }
 
 }
@@ -907,5 +908,13 @@ div.room-panel {
       height: 400px;
       border: 1px solid #ccc;
       overflow-y: auto;
+
+      .message a {
+        color: @username-color;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
   }
 }

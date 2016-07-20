@@ -33,6 +33,7 @@ class NavBar extends React.Component {
     delete localStorage.userId;
   }
 
+
   render() {
     return (
       <nav className='navbar navbar-default navbar-static-top'>
@@ -70,7 +71,11 @@ class NavBar extends React.Component {
           </form>
           <ul className='nav navbar-nav'>
             <li><Link to='/'>Home</Link></li>
-            <li><Link to='/rooms'>Rooms</Link></li>
+            {
+              this.props.user ? (
+                <li><Link to='/lobby'>Lobby</Link></li>
+              ) : null
+            }
             {
               this.props.user ? (
                 <li><Link to='/profile'>Profile</Link></li>
@@ -93,5 +98,9 @@ class NavBar extends React.Component {
     );
   }
 }
+
+NavBar.contextTypes = {
+    router: React.PropTypes.func.isRequired
+};
 
 export default NavBar;
