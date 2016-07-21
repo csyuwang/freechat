@@ -21,6 +21,7 @@ class RoomStore {
   }
 
   onFetchMessagesSuccess(messages) {
+    messages.reverse();
     this.messages = messages;
   }
 

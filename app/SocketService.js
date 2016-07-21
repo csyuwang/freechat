@@ -1,4 +1,4 @@
-import io from 'socket.io/node_modules/socket.io-client';
+import io from 'socket.io-client';
 
 let __instance = (function () {
   let instance;

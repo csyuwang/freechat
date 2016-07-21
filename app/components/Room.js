@@ -18,10 +18,7 @@ class Room extends React.Component {
     SocketService.on('new message', (msg) => {
       RoomActions.updateMessages(msg);
     })
-    var element = $(this.refs.messages.getDOMNode());
-    element.animate({
-      scrollTop: element.prop('scrollHeight')
-    }, 1000);
+    this.scrollToBottom($(this.refs.messages.getDOMNode()));
   }
 
   componentWillUnmount() {
@@ -34,13 +31,18 @@ class Room extends React.Component {
     event.preventDefault();
     SocketService.emit('message', {'userId': this.props.user._id, 'username': this.props.user.name, 'roomId': this.props.params.id, 'content':this.state.message });
     RoomActions.sendMessage();
+    this.scrollToBottom($(this.refs.messages.getDOMNode()));
   }
 
   onChange(state) {
     this.setState(state);
   }
 
-
+  scrollToBottom(element) {
+    element.animate({
+      scrollTop: element.prop('scrollHeight')
+    }, 1000);
+  }
 
   render() {
     var messages = this.state.messages.map((msg) => {

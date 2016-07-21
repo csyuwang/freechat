@@ -4,7 +4,7 @@ exports.findByRoom = function(_createAt, _limit, callback) {
   db.Message.find({
     createAt: _createAt
   }).sort({
-    createDate: 1
+    createDate: -1
   }).limit(_limit).exec(callback);
 }
 
